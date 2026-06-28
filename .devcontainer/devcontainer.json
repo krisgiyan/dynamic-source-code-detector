@@ -1,0 +1,25 @@
+{
+  "name": "dynamic-source-code-detector",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+  "workspaceFolder": "/workspace",
+  "remoteUser": "pwuser",
+  "remoteEnv": {
+    "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD": "1",
+    "PLAYWRIGHT_BROWSERS_PATH": "/ms-playwright"
+  },
+  "initializeCommand": "mkdir -p ${localEnv:HOME}/.claude",
+  "mounts": [
+    "source=${localEnv:HOME}/.claude,target=/home/pwuser/.claude,type=bind,consistency=cached"
+  ],
+  "postCreateCommand": "npm install",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Anthropic.claude-code"
+      ]
+    }
+  }
+}

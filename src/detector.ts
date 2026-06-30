@@ -82,7 +82,7 @@ function buildResult(
  */
 export async function detect(url: string, options: DetectOptions = {}): Promise<DetectionResult> {
   const confidenceThreshold = options.confidenceThreshold ?? DEFAULT_CONFIDENCE_THRESHOLD;
-  const useHeadless = options.useHeadless !== false;
+  const useHeadless = options.useHeadless !== true ? false : true;
 
   // Step 1: Fetch
   const { html, finalUrl } = await fetchPage(url, options);

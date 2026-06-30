@@ -84,7 +84,7 @@ export function analyzeHtml(html: string): StaticAnalysisResult {
   const htmlSize = html.length;
   const textRatio = htmlSize > 0 ? bodyText.length / htmlSize : 0;
 
-  // ── Dynamic signals ───────────────────────────────────────────────────────
+  // Dynamic signals
 
   // CRA noscript message — definitive CSR indicator
   if (html.includes('You need to enable JavaScript to run this app')) {

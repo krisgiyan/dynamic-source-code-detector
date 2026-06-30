@@ -2,9 +2,7 @@
 import { detect } from './detector.js';
 import type { DetectOptions, DetectionResult } from './types.js';
 
-// ---------------------------------------------------------------------------
-// ANSI color helpers (no external deps)
-// ---------------------------------------------------------------------------
+// Make it pretty
 const c = {
   reset: '\x1b[0m',
   bold: '\x1b[1m',
@@ -21,9 +19,7 @@ function colorize(text: string, ...codes: string[]): string {
   return codes.join('') + text + c.reset;
 }
 
-// ---------------------------------------------------------------------------
 // CLI argument parsing
-// ---------------------------------------------------------------------------
 
 function parseArgs(argv: string[]): { url: string | null; options: DetectOptions; json: boolean; help: boolean } {
   const args = argv.slice(2);
@@ -39,8 +35,8 @@ function parseArgs(argv: string[]): { url: string | null; options: DetectOptions
       help = true;
     } else if (arg === '--json') {
       json = true;
-    } else if (arg === '--no-headless') {
-      options.useHeadless = false;
+    } else if (arg === '--use-headless') {
+      options.useHeadless = true;
     } else if (arg === '--threshold' || arg === '-t') {
       const val = parseFloat(args[++i] ?? '');
       if (!isNaN(val) && val >= 0 && val <= 1) options.confidenceThreshold = val;
@@ -63,9 +59,7 @@ function parseArgs(argv: string[]): { url: string | null; options: DetectOptions
   return { url, options, json, help };
 }
 
-// ---------------------------------------------------------------------------
 // Output formatting
-// ---------------------------------------------------------------------------
 
 function renderResult(result: DetectionResult): void {
   const isDynamic = result.isDynamic;
@@ -104,9 +98,7 @@ function renderResult(result: DetectionResult): void {
   console.log('');
 }
 
-// ---------------------------------------------------------------------------
 // Help text
-// ---------------------------------------------------------------------------
 
 function printHelp(): void {
   console.log(`
@@ -119,7 +111,7 @@ ${colorize('Usage:', c.bold)}
   dscd <url> [options]
 
 ${colorize('Options:', c.bold)}
-  --no-headless            Disable Playwright escalation (static analysis only)
+  --use-headless            Enable Playwright escalation (static analysis only)
   --threshold, -t <0-1>   Confidence threshold for headless escalation (default: 0.7)
   --browser, -b <name>    Playwright browser: chromium | firefox | webkit (default: chromium)
   --timeout <ms>          HTTP request timeout in ms (default: 10000)
@@ -134,14 +126,12 @@ ${colorize('Exit codes:', c.bold)}
 
 ${colorize('Examples:', c.bold)}
   dscd https://example.com
-  dscd https://react-app.com --no-headless --json
+  dscd https://react-app.com --use-headless --json
   dscd https://ambiguous-site.com --browser firefox --threshold 0.8
 `);
 }
 
-// ---------------------------------------------------------------------------
 // Main
-// ---------------------------------------------------------------------------
 
 async function main(): Promise<void> {
   const { url, options, json, help } = parseArgs(process.argv);

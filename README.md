@@ -34,7 +34,7 @@ node dist/cli.js <url> [options]
 
 | Flag | Description | Default |
 |---|---|---|
-| `--no-headless` | Disable Playwright escalation | — |
+| `--use-headless` | Enable Playwright escalation | — |
 | `-t, --threshold <0-1>` | Confidence threshold for escalation | `0.7` |
 | `-b, --browser <name>` | `chromium`, `firefox`, or `webkit` | `chromium` |
 | `--timeout <ms>` | HTTP request timeout | `10000` |
@@ -47,7 +47,7 @@ node dist/cli.js <url> [options]
 
 ```bash
 node dist/cli.js https://example.com
-node dist/cli.js https://react-app.com --no-headless --json
+node dist/cli.js https://react-app.com --json
 node dist/cli.js https://ambiguous-site.com --browser firefox --threshold 0.8
 ```
 

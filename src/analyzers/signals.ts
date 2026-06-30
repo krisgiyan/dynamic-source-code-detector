@@ -8,10 +8,6 @@ export interface StaticAnalysisResult {
   dynamicScore: number;
 }
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
 function countWords(text: string): number {
   return text.split(/\s+/).filter((w) => w.length > 2).length;
 }
@@ -30,9 +26,7 @@ function hasEmptyElement($: cheerio.CheerioAPI, selector: string): boolean {
   return text.length < 30 && childCount === 0;
 }
 
-// ---------------------------------------------------------------------------
 // Framework detection (returns the first match)
-// ---------------------------------------------------------------------------
 
 function detectFramework($: cheerio.CheerioAPI, html: string): string | undefined {
   // Next.js — presence of __NEXT_DATA__ or /_next/ assets
@@ -78,9 +72,7 @@ function detectFramework($: cheerio.CheerioAPI, html: string): string | undefine
   return undefined;
 }
 
-// ---------------------------------------------------------------------------
 // Signal detection
-// ---------------------------------------------------------------------------
 
 export function analyzeHtml(html: string): StaticAnalysisResult {
   const $ = cheerio.load(html);
@@ -188,7 +180,7 @@ export function analyzeHtml(html: string): StaticAnalysisResult {
     });
   }
 
-  // ── Static signals ────────────────────────────────────────────────────────
+  // Static signals
 
   // SSR data blobs — server rendered the page but JS hydrates it
   if ($('script#__NEXT_DATA__').length) {
@@ -336,7 +328,7 @@ export function analyzeHtml(html: string): StaticAnalysisResult {
     });
   }
 
-  // ── Score calculation ─────────────────────────────────────────────────────
+  // Score calculation
 
   const dynamicWeight = signals.filter((s) => s.type === 'dynamic').reduce((sum, s) => sum + s.weight, 0);
   const staticWeight = signals.filter((s) => s.type === 'static').reduce((sum, s) => sum + s.weight, 0);

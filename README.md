@@ -6,7 +6,7 @@ Detects whether a webpage requires JavaScript rendering or can be scraped with a
 
 1. **Fetches the page** with a plain HTTP request.
 2. **Analyzes the raw HTML** for signals: empty SPA root containers, bundled JS patterns, SSR data blobs, static generators, CMS fingerprints, and word-count heuristics.
-3. **Escalates to Playwright** only when static analysis confidence falls below the threshold (default 70%). The rendered DOM is compared against raw HTML — significant expansion means content is dynamically generated.
+3. **Optionally escalates to Playwright** when static analysis confidence falls below the threshold (default 70%). This is opt-in (`useHeadless: true` / `--use-headless`) since playwright is an optional peer dependency — pass it explicitly once you've installed playwright. The rendered DOM is compared against raw HTML — significant expansion means content is dynamically generated.
 
 Returns a result with `isDynamic`, `renderingType` (`csr` | `ssr` | `ssg` | `static` | `hybrid`), `framework`, `confidence`, and the `recommendation` (`fetch` or `headless`).
 
@@ -34,7 +34,7 @@ node dist/cli.js <url> [options]
 
 | Flag | Description | Default |
 |---|---|---|
-| `--use-headless` | Enable Playwright escalation | — |
+| `--use-headless` | Enable Playwright escalation | `false` |
 | `-t, --threshold <0-1>` | Confidence threshold for escalation | `0.7` |
 | `-b, --browser <name>` | `chromium`, `firefox`, or `webkit` | `chromium` |
 | `--timeout <ms>` | HTTP request timeout | `10000` |
@@ -75,7 +75,7 @@ console.log(result.signals);         // evidence collected during analysis
 ```ts
 interface DetectOptions {
   confidenceThreshold?: number;   // default: 0.7
-  useHeadless?: boolean;          // default: true
+  useHeadless?: boolean;          // default: false — opt in once playwright is installed
   browser?: 'chromium' | 'firefox' | 'webkit'; // default: 'chromium'
   fetchTimeout?: number;          // ms, default: 10000
   headlessTimeout?: number;       // ms, default: 30000

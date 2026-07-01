@@ -6,6 +6,7 @@
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
   "workspaceFolder": "/workspace",
   "remoteUser": "pwuser",
+  "updateRemoteUserUID": true,
   "remoteEnv": {
     "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD": "1",
     "PLAYWRIGHT_BROWSERS_PATH": "/ms-playwright"

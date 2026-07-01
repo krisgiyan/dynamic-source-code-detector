@@ -105,13 +105,14 @@ function printHelp(): void {
 ${colorize('dynamic-source-code-detector', c.bold, c.cyan)} (dscd)
 
   Detect whether a URL requires JavaScript rendering or can be scraped statically.
-  Falls back to Playwright headless browser only when static analysis is uncertain.
+  Static analysis only by default; pass --use-headless to escalate to Playwright
+  when static analysis is uncertain (requires playwright to be installed).
 
 ${colorize('Usage:', c.bold)}
   dscd <url> [options]
 
 ${colorize('Options:', c.bold)}
-  --use-headless            Enable Playwright escalation (static analysis only)
+  --use-headless            Enable Playwright escalation when uncertain (default: off)
   --threshold, -t <0-1>   Confidence threshold for headless escalation (default: 0.7)
   --browser, -b <name>    Playwright browser: chromium | firefox | webkit (default: chromium)
   --timeout <ms>          HTTP request timeout in ms (default: 10000)

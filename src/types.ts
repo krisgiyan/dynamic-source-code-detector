@@ -59,8 +59,9 @@ export interface DetectOptions {
   confidenceThreshold?: number;
   /**
    * Whether to allow headless browser escalation.
-   * When true, requires playwright to be installed.
-   * Default: true
+   * Opt-in: playwright is an optional peer dependency, so escalation is
+   * disabled unless you explicitly enable it (and have playwright installed).
+   * Default: false
    */
   useHeadless?: boolean;
   /**

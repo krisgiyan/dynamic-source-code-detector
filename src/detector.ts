@@ -10,13 +10,26 @@ import type {
 
 const DEFAULT_CONFIDENCE_THRESHOLD = 0.7;
 
+// Total signal weight at which confidence stops being discounted for thin
+// evidence. Below this, a lopsided score (e.g. one weak signal with nothing
+// on the other side) is scaled down instead of reading as 100% confident.
+const EVIDENCE_SATURATION_WEIGHT = 1.0;
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
-function scoreToConfidence(dynamicScore: number): number {
+function scoreToConfidence(dynamicScore: number, signals: Signal[]): number {
   // Distance from 0.5 (total uncertainty), scaled to 0–1
-  return Math.abs(dynamicScore - 0.5) * 2;
+  const distance = Math.abs(dynamicScore - 0.5) * 2;
+
+  // A one-sided score built from little total evidence (e.g. a single
+  // weak signal with nothing to counterbalance it) shouldn't be reported
+  // as maximally confident just because nothing contradicted it.
+  const totalWeight = signals.reduce((sum, s) => sum + s.weight, 0);
+  const evidenceFactor = Math.min(1, totalWeight / EVIDENCE_SATURATION_WEIGHT);
+
+  return distance * evidenceFactor;
 }
 
 function scoreToRenderingType(
@@ -89,7 +102,7 @@ export async function detect(url: string, options: DetectOptions = {}): Promise<
 
   // Step 2: Static analysis
   const { signals, framework, dynamicScore } = runSignalAnalysis(html);
-  const staticConfidence = scoreToConfidence(dynamicScore);
+  const staticConfidence = scoreToConfidence(dynamicScore, signals);
 
   // Step 3: If confidence is high enough, return without headless
   if (staticConfidence >= confidenceThreshold || !useHeadless) {
@@ -118,7 +131,7 @@ export async function detect(url: string, options: DetectOptions = {}): Promise<
   const staticWeight = allSignals.filter((s) => s.type === 'static').reduce((sum, s) => sum + s.weight, 0);
   const totalWeight = dynamicWeight + staticWeight;
   const combinedDynamicScore = totalWeight > 0 ? dynamicWeight / totalWeight : 0.5;
-  const combinedConfidence = scoreToConfidence(combinedDynamicScore);
+  const combinedConfidence = scoreToConfidence(combinedDynamicScore, allSignals);
 
   return buildResult(combinedDynamicScore, combinedConfidence, allSignals, framework, 'headless-comparison', finalUrl);
 }
@@ -129,6 +142,6 @@ export async function detect(url: string, options: DetectOptions = {}): Promise<
  */
 export function analyzeHtml(html: string): DetectionResult {
   const { signals, framework, dynamicScore } = runSignalAnalysis(html);
-  const confidence = scoreToConfidence(dynamicScore);
+  const confidence = scoreToConfidence(dynamicScore, signals);
   return buildResult(dynamicScore, confidence, signals, framework, 'static-analysis');
 }

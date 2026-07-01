@@ -12,7 +12,8 @@
   },
   "initializeCommand": "mkdir -p ${localEnv:HOME}/.claude",
   "mounts": [
-    "source=${localEnv:HOME}/.claude,target=/home/pwuser/.claude,type=bind,consistency=cached"
+    "source=${localEnv:HOME}/.claude,target=/home/pwuser/.claude,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.ssh,target=/home/pwuser/.ssh,type=bind,consistency=cached,readonly"
   ],
   "postCreateCommand": "npm install",
   "customizations": {

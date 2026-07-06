@@ -1,6 +1,6 @@
 {
   "name": "dynamic-source-code-detector",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Detect whether a webpage requires JavaScript rendering or can be scraped with a plain HTTP request",
   "type": "module",
   "main": "./dist/index.cjs",

@@ -13,7 +13,6 @@ Returns a result with `isDynamic`, `renderingType` (`csr` | `ssr` | `ssg` | `sta
 ## Installation
 
 ```bash
-//NOT YET!
 npm install dynamic-source-code-detector
 ```
 
